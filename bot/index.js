@@ -18,6 +18,16 @@ client.on('interactionCreate', async interaction => {
 	const { commandName, targetId } = interaction;
 
 	if (commandName === 'Explain Code') {
+
+        if(interaction.channel == null)
+        {
+            await interaction.reply("Unfortunately, this bot must be used in a server for now!");
+            return;
+        }
+
+        // Give the bot time for our API to respond
+        await interaction.deferReply();
+
         var codeSnippet = (await interaction.channel.messages.fetch(targetId)).content;
         var userId = interaction.user.tag;
 
@@ -25,26 +35,16 @@ client.on('interactionCreate', async interaction => {
         var language = lines[0].split('```')[1];
         var code = ''.concat(...lines.slice(1, lines.length - 1));
 
+        // Check if this language is supported
         if(!util.SUPPORTED_LANGUAGES.includes(language))
         {
             await interaction.reply("Language must be C#, Java, JavaScript or Python. Please ensure your snippet is correctly formed as a code block with the language on the first line after three backticks.");
             return;
         }
 
-        await interaction.deferReply();
-
-        var currentFunction = await util.parseCurrentFunction(code, language, [0,0]);
-        var isFunction = currentFunction.data["success"];
-        if(isFunction)
-        {
-            var func = currentFunction.data["current_function"];
-            var docstrings = await util.requestDocstrings([func], userId, language);
-            var explanation = docstrings[0]["docstring"];
-            await interaction.editReply("```" + language + "\n" + explanation + "```");
-            return;
-        }
-
-		await interaction.editReply("That doesn't look like a function or method!");
+        var explanation = await util.requestExplanation(code, language, userId);
+        var codeBlock = "```\n"+ explanation + "\n```";
+        await interaction.editReply(codeBlock);
 	}
 });
 

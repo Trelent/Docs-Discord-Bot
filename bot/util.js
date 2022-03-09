@@ -1,10 +1,44 @@
-const PARSE_CURRENT_FUNCTION_URL = 'https://lambda.trelent.net/api/v4/ParseCurrent/ParseCurrentFunction';
-const PARSE_FUNCTIONS_URL        = 'https://lambda.trelent.net/api/v4/ParseAll/ParseSourceCode';
-const WRITE_DOCSTRING_URL        = 'https://trelent.npkn.net/write-docstring';
-module.exports.SUPPORTED_LANGUAGES        = ["csharp", "java", "javascript", "python"];
+const PARSE_CURRENT_FUNCTION_URL   = 'https://lambda.trelent.net/api/v4/ParseCurrent/ParseCurrentFunction';
+const PARSE_FUNCTIONS_URL          = 'https://lambda.trelent.net/api/v4/ParseAll/ParseSourceCode';
+const WRITE_DOCSTRING_URL          = 'https://trelent.npkn.net/write-docstring';
+const WRITE_EXPLANATION_URL        = 'https://trelent.npkn.net/write-explanation';
+module.exports.SUPPORTED_LANGUAGES = ["csharp", "java", "javascript", "python"];
 
 // External imports
 const axios = require('axios').default;
+
+module.exports.requestExplanation = async(code, language, user)  => {
+
+    let explanation = "";
+    let reqBody = {
+        'language': language,
+        'snippet': code,
+        'user': user,
+    };
+
+    // Send the request based on the language
+    await axios({
+        method: 'POST',
+        url: WRITE_EXPLANATION_URL,
+        data: JSON.stringify(reqBody),
+        headers: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => {
+        let result = response.data;
+
+        if(result !== null) {
+            explanation = result["explanation"];
+        }
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+
+    return explanation;
+};
 
 module.exports.requestDocstrings = async(funcs, user, language)  => {
 
