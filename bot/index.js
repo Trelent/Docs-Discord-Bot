@@ -38,7 +38,7 @@ client.on('interactionCreate', async interaction => {
         // Check if this language is supported
         if(!util.SUPPORTED_LANGUAGES.includes(language))
         {
-            await interaction.reply("Language must be C#, Java, JavaScript or Python. Please ensure your snippet is correctly formed as a code block with the language on the first line after three backticks.");
+            await interaction.editReply("Language must be C#, Java, JavaScript or Python. Please ensure your snippet is correctly formed as a code block with the language on the first line after three backticks.");
             return;
         }
 
