@@ -19,16 +19,10 @@ client.on('interactionCreate', async interaction => {
 
 	if (commandName === 'Explain Code') {
 
-        if(interaction.channel == null)
-        {
-            await interaction.reply("Unfortunately, this bot must be used in a server for now!");
-            return;
-        }
-
         // Give the bot time for our API to respond
         await interaction.deferReply();
 
-        var codeSnippet = (await interaction.channel.messages.fetch(targetId)).content;
+        var codeSnippet = interaction.options.getMessage('message').content;
         var userId = interaction.user.tag;
 
         var lines = codeSnippet.split('\n');
