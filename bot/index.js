@@ -19,16 +19,10 @@ client.on('interactionCreate', async interaction => {
 
 	if (commandName === 'Explain Code') {
 
-        if(interaction.channel == null)
-        {
-            await interaction.reply("Unfortunately, this bot must be used in a server for now!");
-            return;
-        }
-
         // Give the bot time for our API to respond
         await interaction.deferReply();
 
-        var codeSnippet = (await interaction.channel.messages.fetch(targetId)).content;
+        var codeSnippet = interaction.options.getMessage('message').content;
         var userId = interaction.user.tag;
 
         var lines = codeSnippet.split('\n');
@@ -38,7 +32,7 @@ client.on('interactionCreate', async interaction => {
         // Check if this language is supported
         if(!util.SUPPORTED_LANGUAGES.includes(language))
         {
-            await interaction.reply("Language must be C#, Java, JavaScript or Python. Please ensure your snippet is correctly formed as a code block with the language on the first line after three backticks.");
+            await interaction.editReply("Language must be C#, Java, JavaScript or Python. Please ensure your snippet is correctly formed as a code block with the language on the first line after three backticks.");
             return;
         }
 
