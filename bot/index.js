@@ -15,7 +15,7 @@ client.once('ready', () => {
 client.on('interactionCreate', async interaction => {
     if(!interaction.isContextMenu()) return;
 
-	const { commandName, targetId } = interaction;
+	const { commandName } = interaction;
 
 	if (commandName === 'Explain Code') {
 

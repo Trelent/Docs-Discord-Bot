@@ -1,4 +1,4 @@
 {
-    "token": "YOUR TOKEN HERE",
-    "clientId": "ID OF APPLICATION"
+    "clientId": "ID OF APPLICATION",
+    "token": "YOUR TOKEN HERE"
 }
